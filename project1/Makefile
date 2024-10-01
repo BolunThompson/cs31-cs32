@@ -1,5 +1,10 @@
 CXX:=clang++
-CXXFLAGS:=-std=c++14 -Wall -Wextra -Wpedantic
+CXXFLAGS:=-std=c++17 \
+          -Wall -Wextra -Wpedantic -Wno-sign-compare -Werror=return-type \
+          -Wno-unknown-pragmas -Werror=vla
+SAN:=-fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer \
+     -fsanitize=bounds
+
 
 mkfile_path:=$(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir:=$(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
@@ -10,7 +15,12 @@ project_zip:=${current_dir}.zip
 bin_files:=original logic_error
 
 .PHONY: all
+all: CXXFLAGS+=${SAN}
 all: ${bin_files}
+
+.PHONY: fast
+fast: CXXFLAGS+=-O2
+fast: ${bin_files}
 
 .PHONY: zip
 zip:
