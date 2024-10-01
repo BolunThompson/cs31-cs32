@@ -1,5 +1,6 @@
 1. I inputed 0 registered voters, 1 Trarris voter, and 0 Hump voters to get the 
    nonsencical output of "inf%" Trarris voters and "-nan%" Hump voters.
+
    The exact input and output follows:
  > How many registered voters were surveyed? 0
  > How many of them say they will probably vote for Trarris? 1
@@ -9,4 +10,14 @@
  > -nan% say they will probably vote for Hump.
  > Trarris is predicted to win the election.
 
-2.
+2. In logic_error.cpp, I swapped the comparison sign from ">" to "<",
+   leading to a Trarris predicted victory if she got less votes than Hump.
+
+   The exact input and output follows:
+ > How many registered voters were surveyed? 10
+ > How many of them say they will probably vote for Trarris? 3
+ > How many of them say they will probably vote for Hump? 7
+ > 
+ > 30.0% say they will probably vote for Trarris.
+ > 70.0% say they will probably vote for Hump.
+ > Trarris is predicted to win the election.
