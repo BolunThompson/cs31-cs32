@@ -14,9 +14,9 @@ project_zip:=${current_dir}.zip
 
 bin_files:=original logic_error
 
-.PHONY: all
-all: CXXFLAGS+=${SAN}
-all: ${bin_files}
+.PHONY: debug
+debug: CXXFLAGS+=${SAN}
+debug: ${bin_files}
 
 .PHONY: fast
 fast: CXXFLAGS+=-O2
