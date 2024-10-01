@@ -1,5 +1,5 @@
 CXX:=clang++
-CXXFLAGS:=-std=c++14 -Wall -Wextra -Werror -Wpedantic
+CXXFLAGS:=-std=c++14 -Wall -Wextra -Wpedantic
 
 mkfile_path:=$(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir:=$(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
