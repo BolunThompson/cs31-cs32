@@ -1,0 +1,19 @@
+1. Obstacles:
+   a. I didn't understand how modulus would work with the algorithm,
+   so I was trying to use it instead of if statements. It doesn't work,
+   so I had to switch to if statements to separate out the different mileage markers.
+
+   b. I also had to review how getline & cin.ignore works in C++, since I didn't remember
+      the exact details from the lecture
+	  (additionally, I'm used to working with APIs that just read in a single line as
+	   a string and then parsing that later on, instead of this "consume single int" style API).
+2. 	< 100 miles rental: (2417, 2754, 4, “Al”, ‘n’, 10)
+	100 miles < total < 600 miles rental: (1885, 1973, 1, “Bob”, ‘y’, 2)
+	> 600 miles rental: (3000, 3600, 5, “Carl”, ‘n’, 6)
+	Winter & Luxury rental: (4000, 4700, 7, “Dennis”, ‘y’, 12)
+	Starting odometer reading negative: (2417, 2754, 4, “Al”, ‘n’, 10)
+	Ending odometer reading less than starting: (500, 400, 2, “Fred”, ‘n’, 4)
+	Number of rental days not positive: (1000, 1500, 0, “Gustav”, ‘n’, 8)
+	Customer name missing: (1500, 1800, 3, “”, ‘n’, 3)
+	Not y/n for luxury rental: (2000, 2500, 2, “Horatio”, ‘x’, 5)
+	Invalid month number: (2500, 2800, 3, “Ito”, ‘n’, 13)

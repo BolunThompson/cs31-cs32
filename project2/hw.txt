@@ -1,0 +1,44 @@
+1. The output would be "endlendl\ngrendel".
+2. It prints a triangle of "#", getting one longer each line up to the inputed number length.
+3. As follows:
+	#include <iostream>
+	using namespace std;
+
+	int main()
+	{
+	    int side;
+
+	    cout << "Enter a number: ";
+	    cin >> side;
+
+	    for (int i = 0; i < side; i++)
+	    {
+		int j = i;
+		while (j >= 0)
+		{
+		    cout << "#";
+			j--;
+		}
+		cout << "\n";
+	    }
+	}
+
+4. As follows:
+	switch (codeSection) {
+		case 281:
+			cout << "bigamy";
+			break;
+		case 321:
+		case 322:
+			cout << "selling illegal lottery tickets";
+			break;
+		case 383:
+			cout << "selling rancid butter";
+			break;
+		case 598:
+			cout << "injuring a bird in a public cemetery";
+			break;
+		default:
+			cout << "some other crime";
+			break;
+	}

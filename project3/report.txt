@@ -1,0 +1,59 @@
+1. a.
+	I had to figure out how to transform a string to upper case
+	(and it required a whole iterator & map function,
+	instead of a simple method call similar to, for instance, Python).
+	Additionally, another challenge was that I didn't realize that vote count digits
+	could be one or two digits, so I initally was processing too much data per
+	number when it was just one.
+
+  b. Both `hasRightSyntax` and `computeVotes` are implemented as simple
+     finite state machines. Diagram:
+
++--------------------------+   Input for digits    +--------------------------+  Input for state code  +-------------------------+
+|        State 0           | --------------------> |        State 1           | ---------------------> |      State 2            |
+|  Processing Party Code   |                       |   Processing Digits      |                        |  Processing State Code  |
++--------------------------+                       +--------------------------+                        +-------------------------+
+        ^    2 chars                                       1 or 2 chars                                     2 chars  |
+        |                                                                                                            |
+        +---------------------------------------- Reset to State 0 --------------------------------------------------+
+	 In `hasRightSyntax`, each state verifies that its associated data is valid or returns false if it isn't.
+	 In `computeVotes`, it checks if the party is the one whose votes is being tallied and, if so, adds the votes
+	 for that party to a local sum. Else, it skips that party. If the passed data is invalid, then the old value
+	 is kept in voteCount. If everything's correct at the end of the computation, the passed voteCount is set to
+	 the local sum.
+
+	 The `main` function contains various tests.
+  c. 
+	  // valid string
+	  assert(hasRightSyntax("D23NER10CA"));
+	  // valid empty string
+	  assert(hasRightSyntax(""));
+	  // invalid: extra leading char
+	  assert(!hasRightSyntax("9D54CA"));
+	  // invalid: no state
+	  assert(!hasRightSyntax("D54"));
+	  // invalid: extra trailing char
+	  assert(!hasRightSyntax("D54CA#"));
+	  // valid: lower case char
+	  assert(hasRightSyntax("r40ms"));
+	  // invalid: 3 digit votes
+	  assert(!hasRightSyntax("R999TX"));
+
+	  int voteCount;
+	  voteCount = -1;
+	  // valid sum
+	  assert(computeVotes("R40ALD54CA", 'R', voteCount) == 0 && voteCount == 40);
+	  voteCount = -1;
+	  // invalid state
+	  assert(computeVotes("R40ZZD54CA", 'D', voteCount) == 1 && voteCount == -1);
+	  voteCount = -1;
+	  // invalid: zero votes for a state
+	  assert(computeVotes("R0TX", 'R', voteCount) == 2 && voteCount == -1);
+	  voteCount = -1;
+	  // invalid: no party
+	  assert(computeVotes("R40TXD54CA", '9', voteCount) == 3 && voteCount == -1);
+	  voteCount = -1;
+	  // valid: no votes for a party
+	  assert(computeVotes("D54CA", 'R', voteCount) == 0 && voteCount == 0);
+	  voteCount = -1;
+
