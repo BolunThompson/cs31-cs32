@@ -6,6 +6,12 @@
 	could be one or two digits, so I initally was processing too much data per
 	number when it was just one.
 
+	Later on, when I was testing it using p32tester, some tests were failing when being called
+	by the harness but not when being called in my main function. The problem was that I
+	assumed `isdigit` would only return 0 or 1, and it was in the first but wasn't
+	in the second scenario. Regardless of whatever glibc corner case I encountered, I solved
+	the problem by casting the result of isdigit to a bool before use (in an add)
+
   b. Both `hasRightSyntax` and `computeVotes` are implemented as simple
      finite state machines. Diagram:
 

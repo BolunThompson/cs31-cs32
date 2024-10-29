@@ -42,7 +42,8 @@ bool hasRightSyntax(string pollData) {
     case 1:
       if (!isdigit(pollData[i]))
         return valid;
-      i += 1 + ((i + 1 < pollData.size()) ? isdigit(pollData[i + 1]) : 0);
+      // casting to bool so 0 or 1 since isdigit may not be 1
+      i += 1 + (bool) ((i + 1 < pollData.size()) ? isdigit(pollData[i + 1]) : 0);
       break;
     case 2:
       code = pollData.substr(i, 2);
@@ -60,10 +61,10 @@ bool hasRightSyntax(string pollData) {
 }
 
 int computeVotes(string pollData, char party, int &voteCount) {
-  if (!hasRightSyntax(pollData))
-    return 1;
   if (!isalpha(party))
     return 3;
+  if (!hasRightSyntax(pollData))
+    return 1;
   // since the dpoint is read as upper-case only.
   party = toupper(party);
 
@@ -90,7 +91,8 @@ int computeVotes(string pollData, char party, int &voteCount) {
     case 1:
       // i + 1 is always inbounds since it is always a number or state code
       // in an assumed to be valid pollData
-      advance = 1 + isdigit(pollData[i + 1]);
+      // casting to bool so 0 or 1 since isdigit may not be 1
+      advance = 1 + (bool) isdigit(pollData[i + 1]);
       num = stoi(pollData.substr(i, advance)); // to int
       if (num == 0) {
         return 2;
@@ -116,6 +118,8 @@ int computeVotes(string pollData, char party, int &voteCount) {
 int main() {
   // valid string
   assert(hasRightSyntax("D23NER10CA"));
+  // valid string
+  assert(hasRightSyntax("D28NYR40TXD4HI"));
   // valid empty string
   assert(hasRightSyntax(""));
   // invalid: extra leading char
@@ -146,6 +150,10 @@ int main() {
   // valid: no votes for a party
   assert(computeVotes("D54CA", 'R', voteCount) == 0 && voteCount == 0);
   voteCount = -1;
+  assert(computeVotes("D28NYR40TXD4HI", '@', voteCount) == 3);
+  voteCount = -1;
+  assert(computeVotes("D28NYR40TXD4HI", 'D', voteCount) == 0);
 
   clog << "Success!" << endl;
+  return 0;
 }
