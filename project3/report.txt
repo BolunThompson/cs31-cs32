@@ -30,36 +30,81 @@
 
 	 The `main` function contains various tests.
   c. 
-	  // valid string
-	  assert(hasRightSyntax("D23NER10CA"));
-	  // valid empty string
-	  assert(hasRightSyntax(""));
-	  // invalid: extra leading char
-	  assert(!hasRightSyntax("9D54CA"));
-	  // invalid: no state
-	  assert(!hasRightSyntax("D54"));
-	  // invalid: extra trailing char
-	  assert(!hasRightSyntax("D54CA#"));
-	  // valid: lower case char
-	  assert(hasRightSyntax("r40ms"));
-	  // invalid: 3 digit votes
-	  assert(!hasRightSyntax("R999TX"));
+    // valid string
+    assert(hasRightSyntax("D23NER10CA"));
+    assert(hasRightSyntax("D28NYR40TXD4HI"));
+    // valid empty string
+    assert(hasRightSyntax(""));
+    // invalid: extra leading char
+    assert(!hasRightSyntax("9D54CA"));
+    // invalid: no state
+    assert(!hasRightSyntax("D54"));
+    // invalid: extra trailing char
+    assert(!hasRightSyntax("D54CA#"));
+    // valid: lower case char
+    assert(hasRightSyntax("r40ms"));
+    // invalid: 3-digit votes
+    assert(!hasRightSyntax("D100CA"));
 
-	  int voteCount;
-	  voteCount = -1;
-	  // valid sum
-	  assert(computeVotes("R40ALD54CA", 'R', voteCount) == 0 && voteCount == 40);
-	  voteCount = -1;
-	  // invalid state
-	  assert(computeVotes("R40ZZD54CA", 'D', voteCount) == 1 && voteCount == -1);
-	  voteCount = -1;
-	  // invalid: zero votes for a state
-	  assert(computeVotes("R0TX", 'R', voteCount) == 2 && voteCount == -1);
-	  voteCount = -1;
-	  // invalid: no party
-	  assert(computeVotes("R40TXD54CA", '9', voteCount) == 3 && voteCount == -1);
-	  voteCount = -1;
-	  // valid: no votes for a party
-	  assert(computeVotes("D54CA", 'R', voteCount) == 0 && voteCount == 0);
-	  voteCount = -1;
+    // valid: mixed uppercase and lowercase letters
+    assert(hasRightSyntax("d54cAr40tX"));
+    // invalid: invalid character between state predictions
+    assert(!hasRightSyntax("D54CA@R40TX"));
+    // invalid: invalid state code
+    assert(!hasRightSyntax("D54XX"));
+    // valid: zero electoral votes (syntactically valid)
+    assert(hasRightSyntax("D0CA"));
+    // invalid: missing party code
+    assert(!hasRightSyntax("54CA"));
+    // invalid: party instead of electoral votes
+    assert(!hasRightSyntax("DRTX"));
+    // valid: single-digit electoral votes
+    assert(hasRightSyntax("D9CA"));
+    // invalid: non-digit characters in electoral votes
+    assert(!hasRightSyntax("D5aCA"));
+    // valid: multiple state predictions
+    assert(hasRightSyntax("D5CAr10TxL6Nv"));
+
+    int voteCount = -1;
+
+    // valid vote counts
+    assert(computeVotes("R40ALD54WI", 'R', voteCount) == 0 && voteCount == 40);
+    voteCount = -1;
+    assert(computeVotes("D54CAR40TX", 'D', voteCount) == 0 && voteCount == 54);
+    // invalid: invalid state code
+    voteCount = -1;
+    assert(computeVotes("R40ZZD54CA", 'D', voteCount) == 1 && voteCount == -1);
+    // invalid: zero votes for a state
+    voteCount = -1;
+    assert(computeVotes("R0TX", 'R', voteCount) == 2 && voteCount == -1);
+    // invalid: non-letter party character
+    voteCount = -1;
+    assert(computeVotes("R40TXD54CA", '9', voteCount) == 3 && voteCount == -1);
+    // valid: no votes for the party specified
+    voteCount = -1;
+    assert(computeVotes("D54CA", 'R', voteCount) == 0 && voteCount == 0);
+    // invalid: non-letter party character
+    voteCount = -1;
+    assert(computeVotes("D28NYR40TXD4HI", '@', voteCount) == 3 && voteCount == -1);
+    // invalid: zero electoral votes in a state prediction
+    voteCount = -1;
+    assert(computeVotes("D0CA", 'D', voteCount) == 2 && voteCount == -1);
+    // invalid: invalid poll data string
+    voteCount = -1;
+    assert(computeVotes("D54CA@", 'D', voteCount) == 1 && voteCount == -1);
+    // invalid: non-letter party character
+    voteCount = -1;
+    assert(computeVotes("D54CA", '1', voteCount) == 3 && voteCount == -1);
+    // valid: empty poll data string
+    voteCount = -1;
+    assert(computeVotes("", 'D', voteCount) == 0 && voteCount == 0);
+    // valid: mixed uppercase and lowercase letters
+    voteCount = -1;
+    assert(computeVotes("d54cAr40tX", 'D', voteCount) == 0 && voteCount == 54);
+    // valid: large electoral votes
+    voteCount = -1;
+    assert(computeVotes("D99CA", 'D', voteCount) == 0 && voteCount == 99);
+    // invalid: three-digit electoral votes in computeVotes
+    voteCount = -1;
+    assert(computeVotes("D100CA", 'D', voteCount) == 1 && voteCount == -1);
 

@@ -3,17 +3,16 @@ CXXFLAGS:=-std=c++17 \
           -Wall -Wextra -Wpedantic -Wno-sign-compare -Werror=return-type \
           -Wno-unknown-pragmas -Werror=vla \
           -Wfloat-equal -Wcast-align -Wstrict-overflow
-DEBUG:=-fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer \
-       -fsanitize=bounds -g -O1
+DEBUG:=-g -O0 -fstandalone-debug -fsanitize=address -fno-omit-frame-pointer
 
 
 mkfile_path:=$(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir:=$(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
 
-zip_files=poll.cpp report.txt
+zip_files=array.cpp report.txt
 project_zip:=${current_dir}.zip
 
-bin_files:=poll xxxtestpoll19781
+bin_files:=array
 
 .PHONY: debug
 debug: CXXFLAGS+=${DEBUG}
@@ -32,8 +31,6 @@ zip: ${zip_files}
 clean: 
 	rm -f ${bin_files} ${project_zip}
 
-test: test.cpp poll.cpp
-	$(CXX) $(CXXFLAGS) $(DEBUG) test.cpp poll.cpp -o test
 
 # using implicit rules for compiling specific files
 # (although I don't know if it's good practice)

@@ -16,7 +16,8 @@
             clang
           ];
           packages = with pkgs; with llvmPackages_19; [
-            gdb
+            lldb
+            rr
             binutils
             git
             clang-tools
