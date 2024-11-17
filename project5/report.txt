@@ -1,0 +1,38 @@
+1. I had to relearn `cin.ignore` and `setprecision`,
+   since I haven't used it since project 2.
+   Otherwise: I felt that this project was fairly straight forward,
+   as long as I paid close attention to the spec.
+
+   One bug I noticed while reviewing my code was that I wasn't setting
+   the current letter in the wordBuffer (where I read in the user's input) to
+   a sentinel value on usage, only one in a copy of the word, leading to a 
+   potential bug that a letter is double counted in wordBuffer.
+
+2. Psuedocode for main:
+   get word list and error exit if it's empty.
+   get number of rounds from user and error exit if below zero.
+   for each try:
+	   call runOneRound for a random word and store the number of tries.
+	   add the current tries to the number of total tries.
+	   print the number of tries the user got the word in.
+	   print the average, minimum, and maximum tries used.
+
+   Psuedocode for runOneRound:
+   repeatedly loop, incrementing tries, starting at one, each time:
+	   read input into wordBuffer, requesting a new input if:
+	      the trial word isn't a word in wordList
+		  or it's not all lowercase and beween 4 through 6 letters long.
+	   if the wordBuffer equals the word, *return* the number of tries.
+	   count the number of stars in the word, marking used letters.
+	   count the number of planets in the word, marking used letters (and ignoring previously marked letters).
+	   print the number of stars & planets.
+
+  Psuedocode for allLowerCase(str):
+  for each char in c-str:
+        if char is lowercase, return false.
+  return true.
+
+  Psuedocode for inStrArray(strs, str):
+  for each c-str in strs:
+        if c-str equals str, return true.
+  return false.
