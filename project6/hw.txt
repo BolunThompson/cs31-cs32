@@ -1,0 +1,125 @@
+1. a.
+	The line "*ptr + 1 = 20" attempts to assign 20 the the value at ptr plus 1, an invalid operation. Instead, it should be *(ptr + 1) = 20.
+	The while loop iterates through the array backwards, meaning that "10 20 30" will be printed, not the desired "30 20 10".
+    Fixed:
+	
+	int main()
+    {
+        int arr[3] = { 5, 10, 15 };
+        int* ptr = arr;
+
+        *ptr = 30;          // set arr[0] to 30
+        *(ptr + 1) = 20;      // set arr[1] to 20
+        ptr += 2;
+        ptr[0] = 10;        // set arr[2] to 10
+
+        ptr = arr;
+        while (ptr <= (arr + 2))
+        {
+            cout << *ptr << endl;    // print values
+            ptr++;
+        }
+    }
+	b. The value of pToMax isn't saved, since the pointer itself is copied when findMax is called and discarded when it returns. To fix, change pToMax to a reference to a pointer:
+	void findMax(int arr[], int n, int*& pToMax)
+    {
+        if (n <= 0) 
+            return;      // no items, no maximum!
+    
+        pToMax = arr;
+
+        for (int i = 1; i < n; i++)
+        {
+            if (arr[i] > *pToMax)
+                 pToMax = arr + i;
+        }
+    }       
+
+    c. There is no memory allocated for the value underlying ptr. To fix it, you could allocate an integer on the stack to put the result of computeCube in:
+    int main()
+    {
+        int res;
+        computeCube(5, &res);
+        cout << "Five cubed is " << res << endl;
+    }
+
+    d. 
+      1. The pointer of str1/str2 is being checked for being zero, not the value underlying the pointer. 
+      2. the pointers of str1 and str2 are being compared, checked for inequality, not the underlying value.
+      3. On return, to check if they ended at the same time, both str1 and str2 should be checked if they're both equal (and hence both null), not that their pointers have the same value.
+     bool strequal(const char str1[], const char str2[]) {
+        while (*str1 != '\0' && *str2 != '\0') {
+            if (*str1 != *str2)
+                return false;
+            str1++;
+            str2++;
+        }
+        return *str1 == *str2;
+    }
+    e.
+        getPtrToArray returns a pointer to an array allocated on the stack, which is undefined behavior (and likely clobbered by the stack of f).
+
+    2. a. double* cat;
+       b. double mouse[5];
+       c. cat = &mouse[4];
+       d. *cat = 25;
+       e. *(mouse + 3) = 42;
+       f. cat -= 3;
+       g. cat[1] = 17;
+       h. cat[0] = 54;
+       i. bool d = cat == mouse;
+       j. bool b = *cat == *(cat + 1);
+
+    3. a.
+    double mean(const double* scores, int numScores)
+    {
+        double tot = 0;
+        for (int i = 0; i < numScores; ++i) {
+            tot += *(scores + i)            
+        }
+        return tot/numScores;
+    }
+    3. b.
+    const char* findTheChar(const char str*, char chr)
+    {
+        for (int k = 0; *(str + k) != 0; k++)
+            if (*(str + k) == chr)
+                return str + k;
+
+        return nullptr;
+    }
+    3. c.
+    const char* findTheChar(const char str*, char chr)
+    {
+        for (; *str != 0; str++)
+            if (*str == chr)
+                return str + k;
+
+        return nullptr;
+    }
+
+    4.
+        3  // number of elements between the pointers (5 - 2 = 3)
+        4  // swap2 swapped the zeroth and second elements of the array. Not effected by swap1 because that functions swaps pointers which are discarded after return.
+        79 // *(array + 1) = 79 assigned 79 to the pointer one after array, ie: the first element
+        -1 // Was set as the zeroth element by *ptr = -1, where ptr was returned by maxwell as the zeroth element since it was larger than the first
+        9  // ptr is incremented by two, then indexed by 1, making it point to element 3, which is set as 9.
+        22 // unmodified
+        19 // unmodified
+
+    5. 
+        void removeS(char* msg) {
+            char* head = msg;
+            for (; *msg != '\0'; ++msg) {
+                if (*msg != 's' && *msg != 'S') {
+                    *head = *msg;
+                    ++head;
+                }
+            }
+            *head = '\0';
+        }
+
+
+    
+        
+
