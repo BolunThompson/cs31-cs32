@@ -209,9 +209,10 @@ void Player::moveOrSwat(int dir) {
   int swat_col = m_col;
   m_room->determineNewPosition(swat_r, swat_col, dir);
 
-  if (m_room->numBeesAt(swat_r, swat_col) >= 1)
+  int numBeesAt = m_room->numBeesAt(swat_r, swat_col);
+  if (numBeesAt >= 1)
     m_room->swatBeeAt(m_row, m_col, dir);
-  else
+  else 
     m_room->determineNewPosition(m_row, m_col, dir);
 }
 
@@ -262,6 +263,7 @@ int Room::numBeesAt(int r, int c) const {
     if (bee->row() == r && bee->col() == c)
       cnt++;
   }
+  assert(cnt >= 0);
   return cnt;
 }
 
@@ -272,18 +274,26 @@ bool Room::determineNewPosition(int &r, int &c, int dir) const {
   case UP:
     if (r > 1)
       r--;
+    else
+      return false;
     break;
   case DOWN:
     if (r < rows())
       r++;
+    else
+      return false;
     break;
   case LEFT:
     if (c > 1)
       c--;
+    else
+      return false;
     break;
   case RIGHT:
     if (c < cols())
       c++;
+    else
+      return false;
     break;
   default:
     return false;
@@ -387,14 +397,19 @@ bool Room::swatBeeAt(int r, int c, int dir) {
 
   for (int i = 0; i < m_nBees; ++i) {
     auto bee = m_bees[i];
+    // cerr << "before brbc" << endl;
     if (bee->row() == r && bee->col() == c) {
+      // cerr << "after brbc" << endl;
       if (bee->getSwatted(dir)) {
+      // cerr << "bee swatted" << endl;
         delete bee;
         // copy bees back to ensure contigious array
         for (int j = i + 1; j < m_nBees; ++j) {
           m_bees[j - 1] = m_bees[j];
         }
+        // cerr << "before: " << m_nBees << endl;
         m_bees[--m_nBees] = nullptr;
+        // cerr << "after: " << m_nBees << endl;
         return true;
       }
       break;
@@ -518,6 +533,129 @@ int randInt(int min, int max) {
   return distro(generator);
 }
 
+#include <cassert>
+#include <type_traits>
+
+#define CHECKTYPE(c, f, r, a)                                                  \
+  static_assert(std::is_same<decltype(&c::f), r(c::*) a>::value,               \
+                "FAILED: You changed the type of " #c "::" #f);                \
+  {                                                                            \
+    [[gnu::unused]] auto p = static_cast<r(c::*) a>(&c::f);                    \
+  }
+
+void thisFunctionWillNeverBeCalled() {
+  // If the student deleted or changed the interfaces to the public
+  // functions, this won't compile.  (This uses magic beyond the scope
+  // of CS 31.)
+
+  Bee(static_cast<Room *>(0), 1, 1);
+  CHECKTYPE(Bee, row, int, () const);
+  CHECKTYPE(Bee, col, int, () const);
+  CHECKTYPE(Bee, move, void, ());
+  CHECKTYPE(Bee, getSwatted, bool, (int));
+
+  Player(static_cast<Room *>(0), 1, 1);
+  CHECKTYPE(Player, row, int, () const);
+  CHECKTYPE(Player, col, int, () const);
+  CHECKTYPE(Player, age, int, () const);
+  CHECKTYPE(Player, isDead, bool, () const);
+  CHECKTYPE(Player, stand, void, ());
+  CHECKTYPE(Player, moveOrSwat, void, (int));
+  CHECKTYPE(Player, setDead, void, ());
+
+  Room(1, 1);
+  CHECKTYPE(Room, rows, int, () const);
+  CHECKTYPE(Room, cols, int, () const);
+  CHECKTYPE(Room, player, Player *, () const);
+  CHECKTYPE(Room, beeCount, int, () const);
+  CHECKTYPE(Room, numBeesAt, int, (int, int) const);
+  CHECKTYPE(Room, determineNewPosition, bool, (int &, int &, int) const);
+  CHECKTYPE(Room, display, void, () const);
+  CHECKTYPE(Room, addBee, bool, (int, int));
+  CHECKTYPE(Room, addPlayer, bool, (int, int));
+  CHECKTYPE(Room, swatBeeAt, bool, (int, int, int));
+  CHECKTYPE(Room, moveBees, bool, ());
+
+  Game(1, 1, 1);
+  CHECKTYPE(Game, play, void, ());
+}
+
+void doBasicTests() {
+  {
+    Room mate(10, 20);
+    assert(mate.addPlayer(2, 6));
+    Player *pp = mate.player();
+    assert(pp->row() == 2 && pp->col() == 6 && !pp->isDead());
+    pp->moveOrSwat(UP);
+    assert(pp->row() == 1 && pp->col() == 6 && !pp->isDead());
+    pp->moveOrSwat(UP);
+    assert(pp->row() == 1 && pp->col() == 6 && !pp->isDead());
+    pp->setDead();
+    assert(pp->row() == 1 && pp->col() == 6 && pp->isDead());
+  }
+  {
+    Room service(2, 2);
+    assert(service.addPlayer(1, 1));
+    assert(service.addBee(2, 2));
+    Player *pp = service.player();
+    assert(service.moveBees());
+    assert(!pp->isDead());
+    for (int k = 0; k < 1000 && !pp->isDead() && service.moveBees(); k++)
+      assert(service.numBeesAt(1, 1) == 0);
+    assert(pp->isDead() && service.numBeesAt(1, 1) == 1);
+  }
+  {
+    Room andBoard(2, 6);
+    assert(andBoard.addPlayer(2, 1));
+    assert(andBoard.addBee(2, 3));
+    assert(andBoard.addBee(1, 1));
+    assert(andBoard.addBee(1, 6));
+    Player *pp = andBoard.player();
+    // cerr << "Player pos: " << pp->row() << ", " << pp->col() << endl;
+    pp->moveOrSwat(RIGHT);
+    // cerr << "Player pos: " << pp->row() << ", " << pp->col() << endl;
+    assert(andBoard.beeCount() == 3 && andBoard.numBeesAt(2, 3) == 1);
+    pp->moveOrSwat(RIGHT);
+    // cerr << "Player pos: " << pp->row() << ", " << pp->col() << endl;
+    assert(andBoard.beeCount() == 3 && andBoard.numBeesAt(2, 4) == 1);
+    pp->moveOrSwat(RIGHT);
+    // cerr << "Player pos: " << pp->row() << ", " << pp->col() << endl;
+    assert(andBoard.beeCount() == 3 && andBoard.numBeesAt(2, 4) == 1);
+    pp->moveOrSwat(RIGHT);
+    // cerr << "Player pos: " << pp->row() << ", " << pp->col() << endl;
+    assert(andBoard.beeCount() == 2 && andBoard.numBeesAt(2, 4) == 0 &&
+           andBoard.numBeesAt(2, 5) == 0);
+    andBoard.addBee(1, 3);
+    assert(andBoard.beeCount() == 3 && andBoard.numBeesAt(1, 3) == 1);
+    // cerr << "interesting part" << endl;
+    // cerr << "Player pos: " << pp->row() << ", " << pp->col() << endl;
+    pp->moveOrSwat(UP);
+    // cerr << andBoard.beeCount() << endl;
+    // cerr << andBoard.numBeesAt(1, 3) << endl;
+    assert(andBoard.beeCount() == 2 && andBoard.numBeesAt(1, 3) == 0);
+    // If the program crashes after leaving this compound statement, you
+    // are probably messing something up when you delete a dead Bee
+    // (or you have mis-coded the destructor).
+    //
+    // Draw a picture of your m_bees array before attcking
+    // and also note the values of m_nBees or any other variables you
+    // might have that are involved with the number of Bees.  Trace
+    // through your code step by step as the Bees die and are
+    // removed, updating the picture according to what the code says, not
+    // what you want it to do.  If you don't see a problem then, try
+    // tracing through the destruction of the room.
+    //
+    // If you execute the code, use the debugger to check on the values
+    // of key variables at various points.  If you didn't try to learn
+    // to use the debugger, insert statements that write the values of
+    // key variables to cerr so you can trace the execution of your code
+    // and see the first place where something has gone amiss.  (Comment
+    // out the call to clearScreen in Room::display so that your output
+    // doesn't disappear.)
+  }
+  cout << "Passed all basic tests" << endl;
+}
+
 ///////////////////////////////////////////////////////////////////////////
 //  main()
 ///////////////////////////////////////////////////////////////////////////
@@ -525,7 +663,9 @@ int randInt(int min, int max) {
 int main() {
   // Create a game
   // Use this instead to create a mini-game:   Game g(3, 4, 2);
-  Game g(3, 4, 2);
+  // doBasicTests();
+  // return 0;
+  Game g(7, 8, 25);
 
   // Play the game
   g.play();
