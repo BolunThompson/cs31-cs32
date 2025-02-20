@@ -14,13 +14,17 @@
           name = "CS 31 Shell";
           nativeBuildInputs = with pkgs; with llvmPackages_19; [
             clang
+            meson
+            ninja
           ];
           packages = with pkgs; with llvmPackages_19; [
+            helix
             lldb
             rr
             binutils
             git
             clang-tools
+            valgrind
           ];
         };
     };

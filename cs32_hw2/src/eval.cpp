@@ -1,6 +1,5 @@
 #include <cassert>
 #include <cstring>
-#include <iostream>
 #include <optional>
 #include <stack>
 #include <string>
@@ -155,36 +154,4 @@ int evaluate(string infix, const bool values[], string &postfix, bool &result) {
   return 1;
 
 }
-
-int main() {
-  bool ba[10] = {//  0      1      2      3      4      5      6      7      8 9
-                 true,  true, true,  false, false,
-                 false, true, false, true,  false};
-  string pf;
-  bool answer;
-  assert(evaluate("2| 3", ba, pf, answer) == 0 && pf == "23|" && answer);
-  assert(evaluate("", ba, pf, answer) == 1);
-  assert(evaluate("8|", ba, pf, answer) == 1);
-  assert(evaluate(" &6", ba, pf, answer) == 1);
-  assert(evaluate("4 5", ba, pf, answer) == 1);
-  assert(evaluate("01", ba, pf, answer) == 1);
-  assert(evaluate("()", ba, pf, answer) == 1);
-  assert(evaluate("()4", ba, pf, answer) == 1);
-  assert(evaluate("2(9|8)", ba, pf, answer) == 1);
-  assert(evaluate("2(&8)", ba, pf, answer) == 1);
-  assert(evaluate("(6&(7|7)", ba, pf, answer) == 1);
-  assert(evaluate("x+5", ba, pf, answer) == 1);
-  assert(evaluate("2|3|4", ba, pf, answer) == 0 && pf == "23|4|" && answer);
-  assert(evaluate("2|(3|4)", ba, pf, answer) == 0 && pf == "234||" && answer);
-  assert(evaluate("4  |  !3 & (0&3) ", ba, pf, answer) == 0 &&
-         pf == "43!03&&|" && !answer);
-  assert(evaluate(" 9  ", ba, pf, answer) == 0 && pf == "9" && !answer);
-  assert(evaluate("((6))", ba, pf, answer) == 0 && pf == "6" && answer);
-  ba[2] = false;
-  ba[9] = true;
-  assert(evaluate("((9))", ba, pf, answer) == 0 && pf == "9" && answer);
-  assert(evaluate("2| 3", ba, pf, answer) == 0 && pf == "23|" && !answer);
-  cout << "Passed all tests" << endl;
-}
-
 
