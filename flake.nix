@@ -7,17 +7,27 @@
 
   outputs = { self, nixpkgs }:
     let
-      pkgs = nixpkgs.legacyPackages.x86_64-linux;
-    in
-    {
-      devShells.x86_64-linux.default = pkgs.mkShell {
+      systems = [ "x86_64-linux" "aarch64-darwin" ];
+    in {
+      devShell = builtins.listToAttrs (map (system: {
+        name = system;
+        value = let
+          pkgs = import nixpkgs { inherit system; };
+          llvm = pkgs.llvmPackages_19;
+        in pkgs.mkShell {
           name = "CS 31 Shell";
-          nativeBuildInputs = with pkgs; with llvmPackages_19; [
+          nativeBuildInputs = with pkgs; with llvm; [
             clang
             meson
             ninja
           ];
-          packages = with pkgs; with llvmPackages_19; [
+          packages = with pkgs; with llvm; (if system == "aarch64-darwin" then [
+            helix
+            lldb
+            binutils
+            git
+            clang-tools
+          ] else [
             helix
             lldb
             rr
@@ -25,7 +35,8 @@
             git
             clang-tools
             valgrind
-          ];
+          ]);
         };
+      }) systems);
     };
 }
