@@ -1,5 +1,5 @@
-CC = g++
-INCLUDES = -I/usr/X11/include/GL
+CC = clang++ -g -Wall -Wextra
+INCLUDES = -isystem /usr/X11/include/GL
 LIBS = -L/usr/X11/lib -lglut -lGL -lGLU
 STD = -std=c++17
 

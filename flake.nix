@@ -20,8 +20,20 @@
             clang
             meson
             ninja
+            freeglut
+            mesa
           ];
           packages = with pkgs; with llvm; (if system == "aarch64-darwin" then [
+            darwin.apple_sdk.frameworks.Security
+            darwin.apple_sdk.frameworks.CoreFoundation
+            darwin.apple_sdk.frameworks.CoreServices
+
+            bear
+            zellij
+            fish
+            fd
+            ripgrep
+            xquartz
             helix
             lldb
             binutils

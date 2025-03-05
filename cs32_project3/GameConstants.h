@@ -38,8 +38,8 @@ const int KEY_PRESS_UP = 1002;
 const int KEY_PRESS_DOWN = 1003;
 const int KEY_PRESS_TAB = '\t';
 const int KEY_PRESS_SPACE = ' ';
-//const int KEY_PRESS_ENTER = '\r';
-//const int KEY_PRESS_ESCAPE = '\x1b';
+// const int KEY_PRESS_ENTER = '\r';
+// const int KEY_PRESS_ESCAPE = '\x1b';
 
 // board dimensions
 
@@ -61,20 +61,22 @@ const int MAX_LEVELS = 99;
 
 // display constants
 
-const double SPRITE_WIDTH_GL = .48; // note - this is tied implicitly to SPRITE_WIDTH due to carey's sloppy openGL programming
-const double SPRITE_HEIGHT_GL = .4; // note - this is tied implicitly to SPRITE_HEIGHT due to carey's sloppy openGL programming
+const double SPRITE_WIDTH_GL =
+    .48; // note - this is tied implicitly to SPRITE_WIDTH due to carey's sloppy
+         // openGL programming
+const double SPRITE_HEIGHT_GL =
+    .4; // note - this is tied implicitly to SPRITE_HEIGHT due to carey's sloppy
+        // openGL programming
 
 // Return a uniformly distributed random int from min to max, inclusive
 
-inline
-int randInt(int min, int max)
-{
-	if (max < min)
-		std::swap(max, min);
-	static std::random_device rd;
-	static std::default_random_engine generator(rd());
-	std::uniform_int_distribution<> distro(min, max);
-	return distro(generator);
+inline int randInt(int min, int max) {
+  if (max < min)
+    std::swap(max, min);
+  static std::random_device rd;
+  static std::default_random_engine generator(rd());
+  std::uniform_int_distribution<> distro(min, max);
+  return distro(generator);
 }
 
 #endif // GAMECONSTANTS_H_

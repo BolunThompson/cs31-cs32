@@ -1,0 +1,72 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I/usr/X11/include/GL",
+      "-o",
+      "Actor.o",
+      "Actor.cpp"
+    ],
+    "directory": "/Users/bolun/programming/cs31/cs32_project3",
+    "file": "/Users/bolun/programming/cs31/cs32_project3/Actor.cpp",
+    "output": "/Users/bolun/programming/cs31/cs32_project3/Actor.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I/usr/X11/include/GL",
+      "-o",
+      "GameController.o",
+      "GameController.cpp"
+    ],
+    "directory": "/Users/bolun/programming/cs31/cs32_project3",
+    "file": "/Users/bolun/programming/cs31/cs32_project3/GameController.cpp",
+    "output": "/Users/bolun/programming/cs31/cs32_project3/GameController.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I/usr/X11/include/GL",
+      "-o",
+      "GameWorld.o",
+      "GameWorld.cpp"
+    ],
+    "directory": "/Users/bolun/programming/cs31/cs32_project3",
+    "file": "/Users/bolun/programming/cs31/cs32_project3/GameWorld.cpp",
+    "output": "/Users/bolun/programming/cs31/cs32_project3/GameWorld.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I/usr/X11/include/GL",
+      "-o",
+      "StudentWorld.o",
+      "StudentWorld.cpp"
+    ],
+    "directory": "/Users/bolun/programming/cs31/cs32_project3",
+    "file": "/Users/bolun/programming/cs31/cs32_project3/StudentWorld.cpp",
+    "output": "/Users/bolun/programming/cs31/cs32_project3/StudentWorld.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/g++",
+      "-c",
+      "-std=c++17",
+      "-I/usr/X11/include/GL",
+      "-o",
+      "main.o",
+      "main.cpp"
+    ],
+    "directory": "/Users/bolun/programming/cs31/cs32_project3",
+    "file": "/Users/bolun/programming/cs31/cs32_project3/main.cpp",
+    "output": "/Users/bolun/programming/cs31/cs32_project3/main.o"
+  }
+]

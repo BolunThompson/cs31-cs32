@@ -1,0 +1,50 @@
+1. StudentWorld::move calls every Actor's doSomething method.
+   In the general doSomething method I implemened on the Actor class,
+   whenever an actor is on the same location as the player, checked by the
+   StudentWorld::actorAtPlayer method, Goodie::doSomethingWithPlayer is called.
+
+   Then, that kills the goodie (via an mAlive setter method on Actor), increases
+   the score by the mScoreBoost parameter (passed in for the goodie by the
+   constructor defined in the subclasses), and Goodie::givePowerUp is called.
+   Garlic proceeds to grant extra burps and ExtraLife grants an additional life.
+
+   doSomethingWithPlayer() proceeds to return false, inducing Actor's doSomething
+   method to return, ending the action.
+
+2. To the best of my knowledge, I have implemented all the specified behavior.
+
+3. I implemented many of my public methods by passing in a specific predicate 
+   lambda function to a generic method. Ex: I have a private actorExists method
+   that takes a pair of coordiantes and a predicate function that determines
+   whether an actor meets the criteria.
+
+   However, I did not include any in the public interface because:
+	1. Minimizes line noise.
+	2. Prevent what would technically be a public way to iterate over every actor.
+	3. To avoid inlining templates in the header. 
+	   The functions that take predicates are templates so I can pass in callables.
+	   Despite this, they do not have to be in the header file, since they're private to
+	   the single file that implements the class.
+
+  Additionally, I avoided overriding any doSomething method in a subclass, instead
+  overriding specific doSomethingX methods for certain situations. Psuedocode for an Actor:
+
+  if not Alive:
+	return
+  if frozen:
+     decrement frozen timer
+	 return
+  if actor increments animation frame each tick:
+     increment animation frame
+  decrement timer
+  if timer has elapsed
+     reset timer
+
+  If player is at the actor's location:
+	doSomethingWithPlayer()
+  If the player did not abort the doSomething method
+    In order, with the suitable condition.
+		doSomethingBefore
+		doSomethingTimer // when the timer is zero
+		doSomethingAfter
+		doSomethingWithPlayer
