@@ -225,7 +225,6 @@ void Player::moveDir(int dir) {
 
 bool Player::doSomethingWithPlayer() {
   if (jumpTick != 0) {
-    doJumpTick();
     return false;
   }
   fallIfValid();
